@@ -1,10 +1,17 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:saaf/screen_home.dart';
 import 'package:saaf/screen_identify.dart';
 import 'package:saaf/screen_report.dart';
 import 'package:saaf/navdraw.dart';
 
-void main() {
+List<CameraDescription> cameras = [];
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  cameras = await availableCameras();
+
   runApp(const MyApp());
 }
 
@@ -17,7 +24,7 @@ class MyApp extends StatelessWidget {
       home: const Saaf(),
       routes: {
         'home' : (context) =>  Home(),
-        'identify' : (context) => const Identify(),
+        'identify' : (context) =>  Identify(cameras: cameras,),
         'report' : (context) => const Report()
       },
     );
@@ -32,7 +39,7 @@ class Saaf extends StatefulWidget {
 }
 
 class _SaafState extends State<Saaf> {
-  final pages= [ Home(), const Identify(), const Report()];
+  final pages= [ Home(),  Identify(cameras: cameras,), const Report()];
   final titles = const ['Saaf', 'Identify', 'Raise a Complaint']; //for appbar
   int _currentIndex = 0;
 
