@@ -87,6 +87,10 @@ class _IdentifyState extends State<Identify> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: pickedImage != null ? FloatingActionButton(child: Icon(Icons.navigate_next), onPressed: (){
+        Navigator.of(context).pushNamed("mlresults");
+      },) : null,
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -100,7 +104,7 @@ class _IdentifyState extends State<Identify> {
                 Container(
                   child: ClipRect(
                       child: pickedImage != null
-                          ? Image.file(pickedImage!)
+                          ? Image.file(pickedImage!, height: 400,)
                           : Text('Upload an Image')),
                 ),
               ],
@@ -118,6 +122,7 @@ class _IdentifyState extends State<Identify> {
           )
         ],
       ),
+      
     );
     ;
   }

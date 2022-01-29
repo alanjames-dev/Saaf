@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saaf/screen_home.dart';
 import 'package:saaf/screen_identify.dart';
+import 'package:saaf/screen_mlresults.dart';
 import 'package:saaf/screen_report.dart';
 import 'package:saaf/navdraw.dart';
 
@@ -24,9 +25,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       home: const Saaf(),
       routes: {
+        'root': (context) => Saaf(),
         'home': (context) => Home(),
         'identify': (context) => Identify(),
-        'report': (context) => Report()
+        'report': (context) => Report(),
+        'mlresults' : (context) => MLResults(),
       },
     );
   }
