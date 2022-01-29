@@ -1,100 +1,124 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:camera/camera.dart';
-import 'package:saaf/screen_mlresults.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
 
 class Identify extends StatefulWidget {
-   Identify({ Key? key , required this.cameras}) : super(key: key);
-
-  List<CameraDescription> cameras;
+  Identify({Key? key}) : super(key: key);
 
   @override
   State<Identify> createState() => _IdentifyState();
 }
 
 class _IdentifyState extends State<Identify> {
-  
-  late CameraController cameraController;
-  XFile? pictureFile;
-
-  Widget cameraWidget(context) {
-    var camera = cameraController.value;
-    // fetch screen size
-    final size = MediaQuery.of(context).size;
-
-    // calculate scale depending on screen and camera ratios
-    // this is actually size.aspectRatio / (1 / camera.aspectRatio)
-    // because camera preview size is received as landscape
-    // but we're calculating for portrait orientation
-    var scale = size.aspectRatio * camera.aspectRatio;
-
-    // to prevent scaling down, invert the value
-    if (scale < 1) scale = 1 / scale;
-
-    return Transform.scale(
-      scale: scale,
-      child: Center(
-        child: CameraPreview(cameraController),
+  File? pickedImage;
+  void imagePickerOption() {
+    Get.bottomSheet(
+      SingleChildScrollView(
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+          ),
+          child: Container(
+            color: Colors.white,
+            height: 250,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    "Select photo from",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      pickImage(ImageSource.camera);
+                    },
+                    icon: const Icon(Icons.camera),
+                    label: const Text("CAMERA"),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      pickImage(ImageSource.gallery);
+                    },
+                    icon: const Icon(Icons.image),
+                    label: const Text("GALLERY"),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: const Icon(Icons.close),
+                    label: const Text("CANCEL"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  @override
-  void initState() {
-    
-  
-    cameraController =
-        CameraController(widget.cameras[1], ResolutionPreset.max);
-    cameraController.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
+  pickImage(ImageSource imageType) async {
+    try {
+      final photo = await ImagePicker().pickImage(source: imageType);
+      if (photo == null) return;
+      final tempImage = File(photo.path);
+      setState(() {
+        pickedImage = tempImage;
+      });
 
-    super.initState();
-
+      Get.back();
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 
-  @override
-  void dispose() {
-    cameraController.dispose();
-    super.dispose();
-  }
-
-  
   @override
   Widget build(BuildContext context) {
-    if (!cameraController.value.isInitialized) {
-      return const SizedBox(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-    return SafeArea(
-        child: Column(
-          children: [
-            if (pictureFile == null)
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: Center(
-                        child: SizedBox(
-                      // width: 200,
-                      height: 500,
-                      //child: CameraPreview(cameraController),
-                      child: cameraWidget(context),
-                    )),
-                  ),
-                  
-                ],
-              ),]
-
-        ),);
-    
+    return Scaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 50,
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Stack(
+              children: [
+                Container(
+                  child: ClipRect(
+                      child: pickedImage != null
+                          ? Image.file(pickedImage!)
+                          : Text('Upload an Image')),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 100,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+                onPressed: imagePickerOption,
+                icon: const Icon(Icons.add_a_photo_sharp),
+                label: const Text('UPLOAD IMAGE')),
+          )
+        ],
+      ),
+    );
+    ;
   }
 }
-
-
