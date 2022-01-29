@@ -1,12 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
+import 'package:async/async.dart';
+import 'package:geocode/geocode.dart';
 
-class Home extends StatelessWidget {
+
+class Home extends StatefulWidget {
   Home({ Key? key }) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+   String locationName = "Kottayam, Kerala";
+
+  @override
+  void initState() {
+    getCurrentLocation();
+    super.initState();
+  }
+
+
+  Future<void> getCurrentLocation() async{
+  GeoCode geoCode = GeoCode();
+
+ 
+
+  var currentLocation = Location();
+  final location = await currentLocation.getLocation();
+  try {
+    if(location.latitude != null && location.longitude != null)
+    {
+     final addresses = await geoCode.reverseGeocoding(latitude: location.latitude!, longitude: location.longitude!);
+      setState(() {
+      locationName = addresses.streetAddress! + "," + addresses.region!;
+        
+      });
+    print(locationName.toString());
+    }
+  } catch (e) {
+    print(e);
+  }  
+
+  
+  
+}
+
 
 
   @override
   Widget build(BuildContext context) {
-    
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.all(10),
@@ -22,7 +65,7 @@ class Home extends StatelessWidget {
               Row(
                 children: [
                   const Icon( Icons.location_pin),
-                   Text( "Kottayam, Kerala", style: TextStyle(fontSize: 16),)
+                   Text( locationName, style: TextStyle(fontSize: 16),)
                 ],
         
               ),
@@ -50,7 +93,7 @@ class Home extends StatelessWidget {
 
               _newsTile(title: "Headline 6",
               subtitle: "Body 2", 
-              avatarURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.vhv.rs%2Fdpng%2Fd%2F426-4263064_circle-avatar-png-picture-circle-avatar-image-png.png&f=1&nofb=1", 
+              avatarURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmoonvillageassociation.org%2Fwp-content%2Fuploads%2F2018%2F06%2Fdefault-profile-picture1-744x744.jpg&f=1&nofb=1", 
               imageURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.cameraegg.org%2Fwp-content%2Fuploads%2F2016%2F01%2FNikon-D500-Sample-Images-2.jpg&f=1&nofb=1")
             
             
@@ -97,8 +140,8 @@ Card _newsTile({required String title, required String subtitle, required String
           ListTile(
             title: Text(title),
             subtitle: Text(subtitle),
-            leading:CircleAvatar(child: Image(image: NetworkImage(avatarURL), ),)
-          ),
+            leading:CircleAvatar(backgroundImage: NetworkImage(avatarURL), ),)
+          ,
           Divider(),
           Image(
             image: NetworkImage(imageURL),
@@ -106,3 +149,5 @@ Card _newsTile({required String title, required String subtitle, required String
             )
             ],
           ));
+
+
