@@ -49,9 +49,9 @@ class _SaafState extends State<Saaf> {
           });
         },
         items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.camera_alt_rounded), label: "Identify"),
-        BottomNavigationBarItem(icon: Icon(Icons.error), label: "Report"),
+        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: "Home"),
+        BottomNavigationBarItem(icon: Icon(Icons.party_mode_outlined), activeIcon: Icon(Icons.camera_alt), label: "Identify"),
+        BottomNavigationBarItem(icon: Icon(Icons.error_outline), activeIcon:  Icon(Icons.error), label: "Report"),
 
       ],),
       
