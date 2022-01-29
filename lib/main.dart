@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saaf/screen_home.dart';
 import 'package:saaf/screen_identify.dart';
 import 'package:saaf/screen_report.dart';
+import 'package:saaf/navdraw.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,6 +39,7 @@ class _SaafState extends State<Saaf> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavDraw(),
       appBar: AppBar(title: Text(titles[_currentIndex]),),
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -49,9 +51,9 @@ class _SaafState extends State<Saaf> {
           });
         },
         items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.camera_alt_rounded), label: "Identify"),
-        BottomNavigationBarItem(icon: Icon(Icons.error), label: "Report"),
+        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: "Home"),
+        BottomNavigationBarItem(icon: Icon(Icons.party_mode_outlined), activeIcon: Icon(Icons.camera_alt), label: "Identify"),
+        BottomNavigationBarItem(icon: Icon(Icons.error_outline), activeIcon:  Icon(Icons.error), label: "Report"),
 
       ],),
       
