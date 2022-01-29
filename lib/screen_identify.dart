@@ -95,7 +95,7 @@ class _IdentifyState extends State<Identify> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(
-            height: 50,
+            height: 10,
           ),
           Align(
             alignment: Alignment.center,
